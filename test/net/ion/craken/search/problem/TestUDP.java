@@ -1,5 +1,6 @@
 package net.ion.craken.search.problem;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.TestCase;
@@ -11,8 +12,10 @@ import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
+import net.ion.nsearcher.reader.InfoReader.InfoHandler;
 import net.ion.nsearcher.search.Searcher;
 
+import org.apache.lucene.index.IndexReader;
 import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
 import org.infinispan.configuration.global.GlobalConfiguration;
@@ -44,7 +47,6 @@ public class TestUDP extends TestCase {
 		dftManager.start();
 
 		InfinispanDirectory dir = new InfinispanDirectory(dftManager.getCache("metadataCache"), dftManager.getCache("chunksCache"), dftManager.getCache("distLocksCache"), "indexName", 1024 * 1024 * 10);
-
 		this.central = CrakenCentralConfig.create(dir).build();
 	}
 
@@ -58,6 +60,10 @@ public class TestUDP extends TestCase {
 	
 	public void testTimedSearch() throws Exception {
 		Searcher searcher = central.newSearcher();
+		
+		
+		
+		
 		while(true){
 			Debug.line(searcher.search("").size()) ;
 			Thread.sleep(1000) ;

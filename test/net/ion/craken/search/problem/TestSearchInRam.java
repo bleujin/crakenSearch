@@ -13,7 +13,7 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.InfinityThread;
 import junit.framework.TestCase;
 
-public class TestOperator extends TestCase {
+public class TestSearchInRam extends TestCase {
 
 	
 	public void testFindEqualInMemory() throws Exception {

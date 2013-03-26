@@ -27,7 +27,7 @@ import org.infinispan.manager.DefaultCacheManager;
 
 import junit.framework.TestCase;
 
-public class TestDrugIndex extends TestCase {
+public class TestManyIndex extends TestCase {
 
 	private Central central;
 	private DefaultCacheManager dftManager;
