@@ -146,7 +146,7 @@ public class TestMultiInfiniDir extends TestCase {
 		defaultConf.clustering().cacheMode(CacheMode.DIST_SYNC).clustering().l1().enable().lifespan(6000000).invocationBatching().enable().clustering().hash().numOwners(2);
 
 		DefaultCacheManager dftManager = new DefaultCacheManager(globalBuilder.build(), defaultConf.build(), true);
-		return CrakenCentralConfig.create(dftManager, cacheName).build();
+		return CrakenCentralConfig.test(dftManager, cacheName).build();
 	}
 
 	private IndexSearcher createMultiSearcher(final Directory dir1, final Directory dir2) throws CorruptIndexException, IOException {

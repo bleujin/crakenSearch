@@ -120,7 +120,7 @@ class MyCacheManager implements OnOrderEventObject {
 				serverCache.put(myCacheName, myCacheName) ;
 
 				dftManager.defineConfiguration(myCacheName, createFastLocalCacheStore()) ;
-				this.central = CrakenCentralConfig.create(dftManager, myCacheName).lockFactory(new SingleInstanceLockFactory()) .build() ;
+				this.central = CrakenCentralConfig.test(dftManager, myCacheName).lockFactory(new SingleInstanceLockFactory()) .build() ;
 				
 			} else if (event == AradonEvent.STOP) {
 				if (central != null)

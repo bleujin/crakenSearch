@@ -33,7 +33,7 @@ public class TestSearchSpeed extends TestCase {
 
 		String myCacheName = "cacheName";
 		dftManager.defineConfiguration(myCacheName, createFastLocalCacheStore("cindex"));
-		Central central = CrakenCentralConfig.create(dftManager, myCacheName).lockFactory(new SimpleFSLockFactory(new File("./resource/temp"))).build();
+		Central central = CrakenCentralConfig.test(dftManager, myCacheName).lockFactory(new SimpleFSLockFactory(new File("./resource/temp"))).build();
 		dftManager.start();
 
 		Indexer indexer = central.newIndexer();
@@ -66,7 +66,7 @@ public class TestSearchSpeed extends TestCase {
 
 		String myCacheName = "cacheName";
 		dftManager.defineConfiguration(myCacheName, createFastLocalCacheStore("cindex"));
-		Central central = CrakenCentralConfig.create(dftManager, myCacheName).lockFactory(new SimpleFSLockFactory(new File("./resource/temp"))).build();
+		Central central = CrakenCentralConfig.test(dftManager, myCacheName).lockFactory(new SimpleFSLockFactory(new File("./resource/temp"))).build();
 		dftManager.start();
 
 		Searcher searcher = central.newSearcher();

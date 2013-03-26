@@ -35,6 +35,6 @@ public class TestSearch extends TestCase{
 		}) ;
 		
 		Searcher searcher = cen.newSearcher();
-		Debug.line( searcher.search("").size()) ;
+		Debug.line(searcher.search("").size()) ;
 	}
 }

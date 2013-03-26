@@ -17,7 +17,7 @@ public class CrakenCentralConfig extends CentralConfig {
 		this.dir = dir ;
 	}
 
-	public static CrakenCentralConfig create(DefaultCacheManager dftManager, String name) {
+	public static CrakenCentralConfig test(DefaultCacheManager dftManager, String name) {
 		Cache cache = dftManager.getCache(name) ;
 		InfinispanDirectory dir = new InfinispanDirectory(cache);
 		return new CrakenCentralConfig(dir);
@@ -28,8 +28,7 @@ public class CrakenCentralConfig extends CentralConfig {
 	}
 	
 	public static CrakenCentralConfig create(DefaultCacheManager dftManager, String metadataCache, String chunksCache, String distLocksCache, String indexName, int chunkSize) {
-		InfinispanDirectory dir = new InfinispanDirectory(dftManager.getCache(metadataCache), dftManager.getCache(chunksCache), dftManager.getCache(distLocksCache), indexName, chunkSize);
-		return new CrakenCentralConfig(dir);
+		return create(new InfinispanDirectory(dftManager.getCache(metadataCache), dftManager.getCache(chunksCache), dftManager.getCache(distLocksCache), indexName, chunkSize));
 	}
 
 	@Override

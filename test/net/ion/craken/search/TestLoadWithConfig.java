@@ -1,58 +1,67 @@
-package net.ion.craken.search.problem;
+package net.ion.craken.search;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import net.ion.craken.loaders.FastFileCacheStore;
-import net.ion.craken.search.CrakenCentralConfig;
 import net.ion.framework.util.Debug;
 import net.ion.nsearcher.common.MyDocument;
 import net.ion.nsearcher.config.Central;
 import net.ion.nsearcher.index.IndexJob;
 import net.ion.nsearcher.index.IndexSession;
 import net.ion.nsearcher.index.Indexer;
-import net.ion.nsearcher.search.SearchResponse;
-import net.ion.nsearcher.search.Searcher;
 import net.ion.radon.impl.util.CsvReader;
 
-import org.apache.lucene.store.SimpleFSLockFactory;
 import org.infinispan.configuration.cache.CacheMode;
-import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
 import org.infinispan.configuration.global.GlobalConfiguration;
 import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.loaders.file.FileCacheStore;
+import org.infinispan.lucene.InfinispanDirectory;
 import org.infinispan.manager.DefaultCacheManager;
 
 import junit.framework.TestCase;
 
-public class TestManyIndex extends TestCase {
+public class TestLoadWithConfig extends TestCase {
 
+	
 	private Central central;
 	private DefaultCacheManager dftManager;
 
+	// http://docs.jboss.org/infinispan/4.2/apidocs/org/infinispan/lucene/InfinispanDirectory.html#InfinispanDirectory%28org.infinispan.Cache%29
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		GlobalConfiguration globalConfig = GlobalConfigurationBuilder.defaultClusteredBuilder().transport().clusterName("mysearch").addProperty("configurationFile", "./resource/config/jgroups-udp.xml").build();
-		this.dftManager = new DefaultCacheManager(globalConfig);
-
-		String myCacheName = "cacheName";
-		dftManager.defineConfiguration(myCacheName, createFastLocalCacheStore("drugfile"));
-		this.central = CrakenCentralConfig.test(dftManager, myCacheName).lockFactory(new SimpleFSLockFactory(new File("./resource/temp"))).build();
-		dftManager.start();
-
+		this.dftManager = new DefaultCacheManager("./resource/config/server-simple.xml");
+		InfinispanDirectory dir = new InfinispanDirectory(dftManager.getCache("metadataCache"), dftManager.getCache("chunksCache"), dftManager.getCache("distLocksCache"), "indexName", 1024 * 1024 * 10);
+		this.central = CrakenCentralConfig.create(dir).build();
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception {
+		central.close();
+		dftManager.stop();
 		super.tearDown();
-		central.close() ;
-		dftManager.stop() ;
 	}
 	
+	public void testTimedIndex() throws Exception {
+		Indexer indexer = central.newIndexer();
+		final AtomicInteger i = new AtomicInteger() ;
+		while (true) {
+			indexer.index(new IndexJob<Void>() {
+				@Override
+				public Void handle(IndexSession session) throws Exception {
+					session.insertDocument(MyDocument.testDocument().number("number", i.incrementAndGet()).keyword("name", "bleujin") ) ;
+					return null;
+				}
+			});
+			Thread.sleep(1000) ;
+		}
 
+	}
+	
 	public void testDrugIndex() throws Exception {
 		Indexer indexer = central.newIndexer();
 		long start = System.currentTimeMillis();
@@ -82,23 +91,6 @@ public class TestManyIndex extends TestCase {
 		Debug.line(System.currentTimeMillis() - start);
 	}
 	
-	public void testSearchDrug() throws Exception {
-		Searcher searcher = central.newSearcher();
-		while(true){
-			searcher.search("0jypwkt").debugPrint() ;
-			Thread.sleep(1000) ;
-		}
-	}
-	
-	
 
-	private static Configuration createFastLocalCacheStore(String cacheName) {
-		// return new ConfigurationBuilder().clustering().cacheMode(CacheMode.DIST_SYNC).clustering().l1().enable().invocationBatching().clustering().hash().numOwners(1).unsafe()
-		return new ConfigurationBuilder().clustering().cacheMode(CacheMode.REPL_SYNC).clustering().invocationBatching().clustering()
-//		 .eviction().maxEntries(1000000)
-				.invocationBatching().enable().loaders().preload(true).shared(false).passivation(false).addCacheLoader().cacheLoader(new FileCacheStore()).addProperty("location", "./resource/" + cacheName)
-				// ./resource/temp
-				.purgeOnStartup(false).ignoreModifications(false).fetchPersistentState(true).async().enabled(false).build();
-	}
-
+	
 }

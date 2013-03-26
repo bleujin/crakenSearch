@@ -140,7 +140,7 @@ class MySearchManager implements OnOrderEventObject {
 				this.dftManager.addListener(new CacheListener()) ;
 
 				dftManager.defineConfiguration(myCacheName, createFastLocalCacheStore()) ;
-				this.central = CrakenCentralConfig.create(dftManager, myCacheName).lockFactory(new SimpleFSLockFactory(new File("./resource/temp"))).build() ;
+				this.central = CrakenCentralConfig.test(dftManager, myCacheName).lockFactory(new SimpleFSLockFactory(new File("./resource/temp"))).build() ;
 				
 				dftManager.start() ;
 			} else if (event == AradonEvent.STOP) {

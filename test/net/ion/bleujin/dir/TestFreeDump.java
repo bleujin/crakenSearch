@@ -71,7 +71,7 @@ public class TestFreeDump extends TestCase {
 		GlobalConfiguration globalConfig = GlobalConfigurationBuilder.defaultClusteredBuilder().transport().clusterName("mysearch").addProperty("configurationFile", "./resource/config/jgroups-udp.xml").build();
 		DefaultCacheManager dftManager = new DefaultCacheManager(globalConfig, createFastLocalCacheStore(), true);
 
-		Central cen = CrakenCentralConfig.create(dftManager, myCacheName).build() ;
+		Central cen = CrakenCentralConfig.test(dftManager, myCacheName).build() ;
 		Indexer indexer = cen.newIndexer();
 		
 		final String[] titles = creader.readLine();
@@ -111,7 +111,7 @@ public class TestFreeDump extends TestCase {
 		String myCacheName = "isbn";
 		DefaultCacheManager dftManager = new DefaultCacheManager(globalConfig, createFastLocalCacheStore(), true);
 		
-		Central cen = CrakenCentralConfig.create(dftManager, myCacheName).build() ;
+		Central cen = CrakenCentralConfig.test(dftManager, myCacheName).build() ;
 		
 		final Searcher searcher = cen.newSearcher();
 		long start = System.currentTimeMillis() ;

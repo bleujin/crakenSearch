@@ -130,7 +130,7 @@ public class TestInfinispanDirStudy extends TestCase {
 //		dftManager.defineConfiguration("LuceneIndexesLocking", new ConfigurationBuilder().loaders().addCacheLoader().cacheLoader(new FastFileCacheStore()).addProperty("location", "./resource/temp").purgeOnStartup(true).clustering().cacheMode(CacheMode.REPL_SYNC).build()) ;
 		
 		
-		Central central = CrakenCentralConfig.create(dftManager, "employee").build() ;
+		Central central = CrakenCentralConfig.test(dftManager, "employee").build() ;
 		return central;
 	}
 	
