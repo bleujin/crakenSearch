@@ -36,7 +36,7 @@ public class TestDistASync extends TestCase {
 		dftManager.defineConfiguration("metadataCache", new ConfigurationBuilder().clustering().cacheMode(CacheMode.REPL_SYNC).clustering().invocationBatching().clustering().invocationBatching().enable().loaders().preload(true).shared(false).passivation(false).addCacheLoader().cacheLoader(
 				new FastFileCacheStore()).addProperty("location", "./resource/temp/distasync").purgeOnStartup(false).ignoreModifications(false).fetchPersistentState(true).async().enabled(false).build());
 
-		dftManager.defineConfiguration("chunksCache", new ConfigurationBuilder().clustering().cacheMode(CacheMode.DIST_ASYNC).clustering().invocationBatching().clustering().eviction().maxEntries(10).invocationBatching().enable().loaders().preload(true).shared(false).passivation(false)
+		dftManager.defineConfiguration("chunksCache", new ConfigurationBuilder().clustering().cacheMode(CacheMode.DIST_SYNC).clustering().invocationBatching().clustering().eviction().maxEntries(10).invocationBatching().enable().loaders().preload(true).shared(false).passivation(false)
 				.addCacheLoader().cacheLoader(new FileCacheStore()).addProperty("location", "./resource/temp/distasync").purgeOnStartup(false).ignoreModifications(false).fetchPersistentState(true).async().enabled(false).build());
 
 		dftManager.defineConfiguration("distLocksCache", new ConfigurationBuilder().clustering().cacheMode(CacheMode.REPL_SYNC).clustering().invocationBatching().clustering().invocationBatching().enable().loaders().preload(true).shared(false).passivation(false).build());
@@ -72,6 +72,7 @@ public class TestDistASync extends TestCase {
 				@Override
 				public Void handle(IndexSession session) throws Exception {
 					session.insertDocument(MyDocument.testDocument().number("number", i.incrementAndGet()).keyword("name", "bleujin") ) ;
+					System.out.println('.') ;
 					return null;
 				}
 			});
